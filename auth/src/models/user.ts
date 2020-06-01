@@ -26,14 +26,18 @@ const userSchema = new mongoose.Schema({
   },
 });
 
+// hash password before sign up
+// not arrow function to save reference from UserDoc
 userSchema.pre("save", async function (done) {
   if (this.isModified("password")) {
     const hashed = await Password.toHash(this.get("password"));
     this.set("password", hashed);
   }
+  //required by MongoDB
   done();
 });
 
+// build function for creating User Schema with types
 userSchema.statics.build = (attrs: UserAttrs) => {
   return new User(attrs);
 };

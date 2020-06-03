@@ -6,7 +6,6 @@ interface UserPayload {
   email: string;
 }
 
-// Add CurrentUser to Express interface
 declare global {
   namespace Express {
     interface Request {

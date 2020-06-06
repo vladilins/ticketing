@@ -14,11 +14,12 @@ spec:
             backend:
               serviceName: auth-srv
               servicePort: 3000
+          - path: /api/tickets/?(.*)
+            backend:
+              serviceName: tickets-srv
+              servicePort: 3000
+          ## should be on the bottom. it's catch all route
           - path: /?(.*)
             backend:
               serviceName: client-srv
-              servicePort: 3000
-          - path: /api/?(.*)
-            backend:
-              serviceName: tickets-srv
               servicePort: 3000

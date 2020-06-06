@@ -25,10 +25,22 @@ it("return 401 if the use is not authenticated", async () => {
     .expect(401);
 });
 it("return 401 if the use does not own the ticket", async () => {
-  await request(app).post("/api/tickets").set("Cookie", global.signin()).send({
-    title: "asgawge",
-    price: 20,
-  });
+  const response = await request(app)
+    .post("/api/tickets")
+    .set("Cookie", global.signin())
+    .send({
+      title: "asgawge",
+      price: 20,
+    });
+
+  await request(app)
+    .put(`/api/tickets/${response.body.id}`)
+    .set("Cookie", global.signin())
+    .send({
+      title: "awetwefsc",
+      price: 4124,
+    })
+    .expect(401);
 });
 it("return 400 if the user provides invalid data", async () => {});
 it("updates the ticket provided valid data", async () => {});

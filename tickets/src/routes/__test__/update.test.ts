@@ -1,6 +1,7 @@
 import request from "supertest";
 import { app } from "../../app";
 import mongoose from "mongoose";
+import { requireAuth } from "@vtickets/common";
 
 it("return a 404 if the provided id does not exist", async () => {
   const id = new mongoose.Types.ObjectId().toHexString();
@@ -23,6 +24,11 @@ it("return 401 if the use is not authenticated", async () => {
     })
     .expect(401);
 });
-it("return 401 if the use does not own the ticket", async () => {});
+it("return 401 if the use does not own the ticket", async () => {
+  await request(app).post("/api/tickets").set("Cookie", global.signin()).send({
+    title: "asgawge",
+    price: 20,
+  });
+});
 it("return 400 if the user provides invalid data", async () => {});
 it("updates the ticket provided valid data", async () => {});

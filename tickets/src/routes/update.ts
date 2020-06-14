@@ -1,10 +1,11 @@
 import express, { Request, Response } from "express";
-import { body, Result } from "express-validator";
+import { body } from "express-validator";
 import {
-  requireAuth,
-  NotFoundError,
-  NotAuthorizedError,
   validateRequest,
+  NotFoundError,
+  requireAuth,
+  NotAuthorizedError,
+  BadRequestError,
 } from "@vtickets/common";
 import { Ticket } from "../models/ticket";
 import { TicketUpdatedPublisher } from "../events/publishers/ticket-updated-publisher";
@@ -19,7 +20,7 @@ router.put(
     body("title").not().isEmpty().withMessage("Title is required"),
     body("price")
       .isFloat({ gt: 0 })
-      .withMessage("Price must be provided or greater than 0"),
+      .withMessage("Price must be provided and must be greater than 0"),
   ],
   validateRequest,
   async (req: Request, res: Response) => {
@@ -27,6 +28,10 @@ router.put(
 
     if (!ticket) {
       throw new NotFoundError();
+    }
+
+    if (ticket.orderId) {
+      throw new BadRequestError("Cannot edit a reserved ticket");
     }
 
     if (ticket.userId !== req.currentUser!.id) {
@@ -38,15 +43,15 @@ router.put(
       price: req.body.price,
     });
     await ticket.save();
-
-    await new TicketUpdatedPublisher(natsWrapper.client).publish({
+    new TicketUpdatedPublisher(natsWrapper.client).publish({
       id: ticket.id,
       title: ticket.title,
       price: ticket.price,
       userId: ticket.userId,
+      version: ticket.version,
     });
 
-    return res.send(ticket);
+    res.send(ticket);
   }
 );
 

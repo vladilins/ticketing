@@ -25,17 +25,17 @@ router.post(
       price,
       userId: req.currentUser!.id,
     });
-
     await ticket.save();
-    await new TicketCreatedPublisher(natsWrapper.client).publish({
+    new TicketCreatedPublisher(natsWrapper.client).publish({
       id: ticket.id,
       title: ticket.title,
       price: ticket.price,
       userId: ticket.userId,
+      version: ticket.version,
     });
 
     res.status(201).send(ticket);
   }
 );
 
-export { router as CreateTicketRouter };
+export { router as createTicketRouter };

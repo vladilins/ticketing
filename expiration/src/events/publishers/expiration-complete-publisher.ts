@@ -1,8 +1,4 @@
-import {
-  Subjects,
-  Publisher,
-  ExpirationCompleteEvent,
-} from '@sgtickets/common';
+import { Subjects, Publisher, ExpirationCompleteEvent } from "@vtickets/common";
 
 export class ExpirationCompletePublisher extends Publisher<
   ExpirationCompleteEvent

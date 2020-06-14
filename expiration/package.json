@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node-dev src/index.ts",
+    "start": "ts-node-dev --poll src/index.ts",
     "test": "jest --watchAll --no-cache"
   },
   "jest": {
@@ -18,12 +18,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@sgtickets/common": "^1.0.23",
+    "@vtickets/common": "^1.0.8",
     "@types/bull": "^3.12.2",
     "bull": "^3.13.0",
-    "node-nats-streaming": "^0.2.6",
+    "node-nats-streaming": "^0.3.2",
     "ts-node-dev": "^1.0.0-pre.44",
-    "typescript": "^3.8.3"
+    "typescript": "^3.9.3"
   },
   "devDependencies": {
     "@types/jest": "^25.2.1",
